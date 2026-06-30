@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creator Hub</title>
+
+    <!-- jsPDF -->
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+    <script>
+        window.jsPDF = window.jspdf.jsPDF; /* REQUIRED FIX */
+    </script>
+
+    <!-- html2canvas -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<header>
+
+    <div class="header-content">
+        <div>
+            <h1 class="header-title">✨ Creator Hub ✨</h1>
+            <p class="header-subtitle"
+               style="margin: 0.25rem 0 0 0; color: var(--accent-grey); font-size: var(--font-size-sm);">
+                Tools to improve your content. Locally stored, no Google login.
+            </p>
+        </div>
+        <nav class="nav-tabs" role="tablist">
+            <button class="nav-tab active" data-tab="niche">Niche Finder</button>
+            <button class="nav-tab" data-tab="mix">Content Mix</button>
+            <button class="nav-tab" data-tab="tasks">Task Breaker</button>
+            <button class="nav-tab" data-tab="tone">Tone Tools</button>
+            <button class="nav-tab" data-tab="analytics">Analytics</button>
+            <button class="nav-tab" data-tab="media">Media Kit</button>
+            <button class="nav-tab" data-tab="habits">Habit Tracker</button>
+        </nav>
+    </div>
+</header>
+<body>
+<div class="data-management">
+    <button class="data-btn" onclick="exportAllData()">💾 Export data</button>
+    <button class="data-btn" onclick="importData()">📂 Import data</button>
+    <button class="data-btn" onclick="clearAllData()">🗑️ Clean all</button>
+    <input type="file" id="file-input" style="display:none;" accept=".json">
+</div>
+
+<main>
+    <!-- Niche Finder -->
+    <section class="section active" id="niche-panel">
+        <div class="card">
+            <h2 class="card-title">🔍 Niche Finder</h2>
+            <p class="card-description">
+                Your niche = content × energy. This questionnaire helps you identify both of these elements.
+            </p>
+        </div>
+
+        <div style="max-width: 600px; margin: 0 auto;">
+            <div id="quiz-content">
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; margin-bottom: 1rem;">
+                        <strong>1. Which one best describes your main content?</strong>
+                    </label>
+                    <div class="quiz-options">
+                        <div class="quiz-option">
+                            <input type="radio" id="Please 1" name="content-type" value="gaming">
+                            <label for="Please 1">Gaming</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q1b" name="content-type" value="commentary">
+                            <label for="q1b">Commentary</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q1c" name="content-type" value="creative">
+                            <label for="q1c">Creative/Art</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q1d" name="content-type" value="educational">
+                            <label for="q1d">Educational</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q1e" name="content-type" value="lifestyle">
+                            <label for="q1e">Lifestyle/IRL/Vlogs</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; margin-bottom: 1rem;">
+                        <strong>2. What is your predominant energy?</strong>
+                    </label>
+                    <div class="quiz-options">
+                        <div class="quiz-option">
+                            <input type="radio" id="q2a" name="vibe" value="chaotic">
+                            <label for="q2a">Chaotic</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q2b" name="vibe" value="cozy">
+                            <label for="q2b">Cozy</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q2c" name="vibe" value="analytical">
+                            <label for="q2c">Analytical</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q2d" name="vibe" value="theatrical">
+                            <label for="q2d">Hyper</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q2e" name="vibe" value="chill">
+                            <label for="q2e">Relaxed</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; margin-bottom: 1rem;">
+                        <strong>3. Why people stay in your streams?</strong>
+                    </label>
+                    <div class="quiz-options">
+                        <div class="quiz-option">
+                            <input type="radio" id="humor" name="retention" value="humor">
+                            <label for="humor">Humor</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q3b" name="retention" value="expertise">
+                            <label for="q3b">Expertise</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q3c" name="retention" value="authenticity">
+                            <label for="q3c">Autenticity</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q3d" name="retention" value="community">
+                            <label for="q3d">Community</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="histories" name="retention" value="storytelling">
+                            <label for="histories">Histories</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="calculateNiche()">Find my niche</button>
+            </div>
+
+            <div id="quiz-result" style="display: none;">
+                <div class="quiz-result">
+                    <div class="quiz-result-title" id="niche-title"></div>
+                    <div class="quiz-result-description" id="niche-description"></div>
+                    <div id="niche-strategies"
+                         style="margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--accent-grey);"></div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-primary btn-small" onclick="penholder()">Reset</button>
+                        <button class="btn btn-secondary btn-small" onclick="downloadNicheResult()">Download your
+                            result
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content Mix -->
+    <section class="section" id="mix-panel">
+        <div class="card">
+            <h2 class="card-title">📊 Content Mix</h2>
+            <p class="card-description">Healthy goal: 60% Retention / 30% Growth / 10% Experimental</p>
+        </div>
+
+        <div class="mix-category">
+            <div style="font-weight: bold; color: var(--accent-lavender); margin-bottom: 0.75rem;">💜 Retention</div>
+            <div class="mix-input-group">
+                <div>
+                    <label>Retention videos:</label>
+                    <input type="number" id="retention-count" value="12" min="0" onchange="calculateMix()">
+                </div>
+                <div>
+                    <label>%:</label>
+                    <input type="number" id="retention-percent" readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="mix-category">
+            <div style="font-weight: bold; color: var(--accent-lavender); margin-bottom: 0.75rem;">🌱 Growth</div>
+            <div class="mix-input-group">
+                <div>
+                    <label>Growth videos:</label>
+                    <input type="number" id="growth-count" value="6" min="0" onchange="calculateMix()">
+                </div>
+                <div>
+                    <label>%:</label>
+                    <input type="number" id="growth-percent" readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="mix-category">
+            <div style="font-weight: bold; color: var(--accent-lavender); margin-bottom: 0.75rem;">✨ Experimental</div>
+            <div class="mix-input-group">
+                <div>
+                    <label>Experimental videos:</label>
+                    <input type="number" id="experimental-count" value="2" min="0" onchange="calculateMix()">
+                </div>
+                <div>
+                    <label>%:</label>
+                    <input type="number" id="experimental-percent" readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; gap: 1rem;">
+                <div style="flex: 1;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="retention-bar" style="width: 60%; background: #d4a5d9;">60%</div>
+                    </div>
+                    <small>Retention</small>
+                </div>
+                <div style="flex: 1;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="growth-bar" style="width: 30%; background: #9b8fa8;">30%</div>
+                    </div>
+                    <small>Growth</small>
+                </div>
+                <div style="flex: 1;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="experimental-bar" style="width: 10%; background: #7b6ba8;">10%
+                        </div>
+                    </div>
+                    <small>Experimental</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Task Breaker -->
+    <section class="section" id="tasks-panel">
+        <div class="card">
+            <h2 class="card-title">🔨 Task Breaker</h2>
+            <p class="card-description">Divide your tasks in SMART small ones.</p>
+        </div>
+
+        <div class="card">
+            <label for="task-input"><strong>Your task</strong></label>
+            <textarea id="task-input" placeholder="Describe your task..."></textarea>
+
+            <div>
+                <strong style="color: var(--accent-lavender);">How much small shall the steps be?</strong>
+                <div class="tone-buttons">
+                    <button class="tone-btn" onclick="breakDownTask('gentle')">🪶 Soft</button>
+                    <button class="tone-btn" onclick="breakDownTask('medium')">⚡ Medium</button>
+                    <button class="tone-btn" onclick="breakDownTask('tiny')">💨 Tiny</button>
+                </div>
+            </div>
+
+            <div id="task-breakdown" style="display: none;">
+                <div class="task-breakdown">
+                    <strong style="color: var(--accent-lavender);">Your step results:</strong>
+                    <div id="task-steps"></div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-primary btn-small" onclick="copyTasks()">Copy</button>
+                        <button class="btn btn-secondary btn-small" onclick="downloadTasks()">Download</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tone Tools -->
+    <section class="section" id="tone-panel">
+        <div class="card">
+            <h2 class="card-title">🎭 Tone Tools</h2>
+            <p class="card-description">Adjust your message tone to avoid misunderstandings</p>
+        </div>
+
+        <div class="tone-container">
+            <div class="card tone-tool">
+                <h3 class="card-title">Tone Shifter</h3>
+                <textarea id="tone-input" placeholder="Paste your message here..."></textarea>
+                <div class="tone-buttons">
+                    <button class="tone-btn" onclick="shiftTone('formal')">📖 Formal</button>
+                    <button class="tone-btn" onclick="shiftTone('casual')">😄 Casual</button>
+                    <button class="tone-btn" onclick="shiftTone('softer')">💜 Soft</button>
+                    <button class="tone-btn" onclick="shiftTone('urgent')">⚡ Urgent</button>
+                </div>
+                <div class="tone-output" id="tone-output"></div>
+            </div>
+
+            <div class="card tone-tool">
+                <h3 class="card-title">Tone Read</h3>
+                <textarea id="analyze-input" placeholder="Paste your message to analyze..."></textarea>
+                <button class="btn btn-primary" onclick="analyzeTone()">Analyze</button>
+                <div class="tone-output" id="analyze-output"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Analytics -->
+    <section class="section" id="analytics-panel">
+        <div class="card">
+            <h2 class="card-title">📈 Video Analytics & SNS Strategy</h2>
+            <p class="card-description">Analyze your performance and get strategies to increase your reach</p>
+        </div>
+
+        <div class="card">
+            <h3 style="color: var(--accent-lavender); margin: 0 0 1rem 0;">Enter the Details of Your Latest Video</h3>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label>Video title</label>
+                    <input type="text" id="video-title" placeholder="Ex: Analysis of...">
+                </div>
+                <div>
+                    <label>Platform</label>
+                    <select id="video-platform" onchange="updatePlatformStrategy()">
+                        <option value="">Select platform</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="twitch">Twitch</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="twitter">Twitter/X</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="discord">Discord</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Views</label>
+                    <input type="number" id="video-views" placeholder="0" min="0">
+                </div>
+                <div>
+                    <label>Likes</label>
+                    <input type="number" id="video-likes" placeholder="0" min="0">
+                </div>
+                <div>
+                    <label>Comments</label>
+                    <input type="number" id="video-comments" placeholder="0" min="0">
+                </div>
+                <div>
+                    <label>Average Minutes Watched</label>
+                    <input type="number" id="avg-watch-time" placeholder="0" min="0" step="0.1">
+                </div>
+                <div>
+                    <label>Video duration (min)</label>
+                    <input type="number" id="video-duration" placeholder="0" min="1" step="0.1">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="analyzeVideo()" style="margin-top: 1rem;">Analyze</button>
+        </div>
+
+        <div id="analytics-results" style="display: none;">
+            <div class="analytics-grid">
+                <div class="stat-box">
+                    <div class="stat-label">Engagement Rate</div>
+                    <div class="stat-value" id="engagement-rate">0%</div>
+                    <div class="trend" id="engagement-trend"></div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Click-Through Rate (estimado)</div>
+                    <div class="stat-value" id="ctr">0%</div>
+                    <div class="trend" id="ctr-trend"></div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Average Retention</div>
+                    <div class="stat-value" id="retention-rate">0%</div>
+                    <div class="trend" id="retention-trend"></div>
+                </div>
+            </div>
+
+            <div class="recommendations" id="platform-strategy">
+                <h3 style="margin-top: 0; color: var(--accent-lavender);">📱 SNS Strategies for Reach</h3>
+                <div id="sns-recommendations"></div>
+            </div>
+
+            <div class="recommendations">
+                <h3 style="margin-top: 0; color: var(--accent-lavender);">💡 General reccomendations</h3>
+                <div id="general-recommendations"></div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button class="btn btn-primary btn-small" onclick="downloadAnalytics()">Download</button>
+                <button class="btn btn-secondary btn-small" onclick="saveAnalytics()">Save Progress</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Media Kit -->
+    <section class="section" id="media-panel">
+        <div class="card">
+            <h2 class="card-title">📋 Media Kit</h2>
+            <p class="card-description">Create a professional Media Kit locally on your PC. No login required. Download
+                and
+                share!</p>
+        </div>
+
+        <div class="card">
+            <label for="channel-name"><strong>Channel Name</strong></label>
+            <input type="text" id="channel-name" placeholder="Mizzage" onchange="saveMediaKit()">
+
+            <label for="channel-description"><strong>Description</strong></label>
+            <textarea id="channel-description" placeholder="Describe your content and niche..."
+                      onchange="saveMediaKit()"></textarea>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label for="channel-subscribers"><strong>Subscribers</strong></label>
+                    <input type="number" id="channel-subscribers" placeholder="0" min="0" onchange="saveMediaKit()">
+                </div>
+
+                <div>
+                    <label for="avg-views"><strong>Average Views</strong></label>
+                    <input type="number" id="avg-views" placeholder="0" min="0" onchange="saveMediaKit()">
+                </div>
+
+                <div>
+                    <label for="engagement-rate-stat"><strong>Engagement Rate (%)</strong></label>
+                    <input type="number" id="engagement-rate-stat" placeholder="0" min="0" step="0.1"
+                           onchange="saveMediaKit()">
+                </div>
+            </div>
+
+            <label for="platforms"><strong>Main Platforms</strong></label>
+            <input type="text" id="platforms" placeholder="YouTube, Twitch, Discord, Twitter" onchange="saveMediaKit()">
+
+            <button class="btn btn-primary" onclick="generateMediaKit()" style="width: 100%; margin-top: 1rem;">📊
+                Generate
+                Media Kit
+            </button>
+        </div>
+
+        <!-- Media Kit Preview -->
+        <div id="media-kit-container" style="display: none;">
+            <div class="media-kit-preview">
+
+                <!-- Header Section -->
+                <div
+                        style="text-align: center; margin-bottom: 2rem; border-bottom: 2px solid var(--accent-lavender); padding-bottom: 1.5rem;">
+                    <h2 id="mk-channel-name"
+                        style="margin: 0; color: var(--accent-lavender); font-family: 'Inconsolata', monospace;">Your
+                        Channel
+                    </h2>
+                    <p id="mk-description"
+                       style="margin: 0.75rem 0 0 0; font-size: var(--font-size-sm); color: var(--accent-grey);"></p>
+                </div>
+
+                <!-- Statistics Section -->
+                <div class="media-kit-section">
+                    <div class="media-kit-section-title">📊 Statistics</div>
+
+                    <div class="media-kit-stat">
+                        <span>Subscribers:</span>
+                        <strong id="mk-subscribers">0</strong>
+                    </div>
+
+                    <div class="media-kit-stat">
+                        <span>Average Views:</span>
+                        <strong id="mk-views">0</strong>
+                    </div>
+
+                    <div class="media-kit-stat">
+                        <span>Engagement Rate:</span>
+                        <strong id="mk-engagement">0%</strong>
+                    </div>
+                </div>
+
+                <!-- Platforms Section -->
+                <div class="media-kit-section">
+                    <div class="media-kit-section-title">📱 Platforms</div>
+                    <p id="mk-platforms" style="margin: 0; font-size: var(--font-size-sm); color: var(--text-light);">
+                        N/A</p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                    <button class="btn btn-primary btn-small" onclick="generatePDF()">📥 Download</button>
+                    <button class="btn btn-secondary btn-small" onclick="copyMediaKitText()">📋 Copy</button>
+                </div>
+            </div>
+    </section>
+
+
+    <!-- Habit Tracker -->
+    <section class="section" id="habits-panel">
+        <div class="card">
+            <h2 class="card-title">✨ Creator habits</h2>
+            <p class="card-description">Track your habits</p>
+        </div>
+
+        <div class="card">
+            <label for="new-habit"><strong>Add habit</strong></label>
+            <input type="text" id="new-habit" placeholder="Ej: Shower every day">
+            <button class="btn btn-primary" onclick="gradient()">Add habit</button>
+
+            <div class="habit-grid" id="habit-grid">
+                <div class="habit-card" onclick="toggleHabit(this)">
+                    <div style="font-weight: bold;">📝 Plan script</div>
+                    <div style="font-size: 1.5rem; margin-top: 0.5rem;">❌</div>
+                </div>
+                <div class="habit-card" onclick="toggleHabit(this)">
+                    <div style="font-weight: bold;">🎬 Edit video</div>
+                    <div style="font-size: 1.5rem; margin-top: 0.5rem;">❌</div>
+                </div>
+                <div class="habit-card" onclick="toggleHabit(this)">
+                    <div style="font-weight: bold;">💬 Interact with fans</div>
+                    <div style="font-size: 1.5rem; margin-top: 0.5rem;">❌</div>
+                </div>
+                <div class="habit-card" onclick="toggleHabit(this)">
+                    <div style="font-weight: bold;">🎯 Plan content</div>
+                    <div style="font-size: 1.5rem; margin-top: 0.5rem;">❌</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div class="accessibility-panel">
+    <button class="accessibility-toggle" onclick="toggleAccessibilityPanel()">♿ Accesibility</button>
+    <div class="accessibility-options">
+        <div class="accessibility-option">
+            <input type="checkbox" id="larger-text" onchange="toggleLargerText()">
+            <label for="larger-text">Bigger text</label>
+        </div>
+        <div class="accessibility-option">
+            <input type="checkbox" id="reduce-motion" onchange="toggleReduceMotion()">
+            <label for="reduce-motion">Reduce animations</label>
+        </div>
+    </div>
+</div>
+
+<script src="/scripts.js"></script>
+</body>
+</html>
